@@ -70,7 +70,7 @@ form{
     backdrop-filter: blur(10px);
     border: 2px solid rgba(255,255,255,0.1);
     box-shadow: 0 0 40px rgba(8,7,16,0.6);
-    padding: 50px 35px;
+    padding: 10px 35px;
 }
 form *{
     font-family: 'Poppins',sans-serif;
@@ -162,18 +162,24 @@ button{
 </div> -->
 
 <div style="margin-left:50px">
-  <!-- <div class="w3-padding"><h1 style="color:rgb(223, 100, 18);"> Sensor Type Registration </h1> -->
+  <!-- <div class="w3-padding"><h1 style="color:rgb(223, 100, 18);"> Sensor Instance Registration </h1> -->
 
 
     <form>
-        <p style="font-size: large; color: #ff512f;"> Sensor Type Registration </p>
-        <label for="sensortype">Sensor Type Name: </label>
-        <input type="text" id="sensorType"><br>
+        <p style="font-size: large; color: #ff512f;"> Sensor Instance Registration </p>
+        <label for="sensortype">Sensor type:</label>
+        <input type="text" id="sensorType">
 
-        <label for="datatype">DataType:</label>
-        <input type="text" id="dataType"><br><br><br>
+        <label for="loc">Location</label>
+        <input type="text" id="location">
+        
+        <label for="sensorip">Sensor IP:</label>
+        <input type="text" id="sensorIP">
 
-        <button id="submit" type="button" onclick="sendTypeData()">Submit</button>    
+        <label for="sensorport">Sensor Port:</label>
+        <input type="text" id="sensorPort"><br>
+
+        <button id="submit" type="button" onclick="sendInstanceData()">Submit</button>    
     </form>
     
     
@@ -216,13 +222,17 @@ function openLink(evt, animName) {
   evt.currentTarget.className += " w3-red";
 }
 // console.log(document.getElementById("sensorType"))
-function sendTypeData() {
+function sendInstanceData() {
     data = {
         "type": document.getElementById("sensorType").value,
-        "dataType": document.getElementById("dataType").value
+        "location": document.getElementById("location").value,
+        "ip": document.getElementById("sensorIP").value,
+        "port": document.getElementById("sensorPort").value
     }
     console.log(data["type"])
-    console.log(data["dataType"])
+    console.log(data["location"])
+    console.log(data["ip"])
+    console.log(data["port"])
 }
 </script>
 
