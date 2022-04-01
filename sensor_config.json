@@ -1,0 +1,22 @@
+{
+    "sensor_instances": [
+       {
+        "sensor_type": "light",
+        "sensor_ip": "127.0.0.1",
+        "sensor_port": "9092",
+        "geo_location": "himalaya-block"  
+       },
+       {
+        "sensor_type": "light",
+        "sensor_ip": "127.0.0.1",
+        "sensor_port": "9093",
+        "geo_location": "himalaya-block"  
+       },
+       {
+        "sensor_type": "temp",
+        "sensor_ip": "127.0.0.1",
+        "sensor_port": "9094",
+        "geo_location": "vindhya-block"  
+       }
+    ]
+ }
