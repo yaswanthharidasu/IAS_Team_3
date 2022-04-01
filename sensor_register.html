@@ -59,7 +59,7 @@ body{
     bottom: -80px;
 }
 form{
-    height: 520px;
+    height: 590px;
     width: 400px;
     background-color: rgba(255,255,255,0.13);
     position: absolute;
@@ -151,7 +151,7 @@ button{
 <body>
 
 
-<div class="w3-sidebar w3-bar-block w3-black w3-card" style="width:130px">
+<!-- <div class="w3-sidebar w3-bar-block w3-black w3-card" style="width:130px">
   <h5 class="w3-bar-item"><b>MENU</b></h5>
   <button style="color:rgb(14, 123, 187);" class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Fade')">End User</button>
   <button style="color:rgb(14, 123, 187);" class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Left')">Sensor Manager</button>
@@ -159,20 +159,25 @@ button{
   <button style="color:rgb(14, 123, 187);" class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Top')">Model Developer</button>
   <button style="color:rgb(14, 123, 187);" class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Bottom')">App Developer</button>
   <button style="color:rgb(14, 123, 187);" class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Zoom')">About</button>
-</div>
+</div> -->
 
-<div style="margin-left:130px">
-  <div class="w3-padding"><h1 style="color:rgb(223, 100, 18);">IAS TEAM 5</h1>
+<div style="margin-left:50px">
+  <div class="w3-padding"><h1 style="color:rgb(223, 100, 18);"> Sensor Instance Registration </h1>
 
 
     <form>
-        <h6>Sensor Instance Registration</h6>
 
         <label for="sensortype">Sensor type:</label>
         <input type="text" id="sensorType">
 
         <label for="loc">Location</label>
         <input type="text" id="location">
+        
+        <label for="sensorip">Sensor IP:</label>
+        <input type="text" id="sensorIP">
+
+        <label for="sensorport">Sensor Port:</label>
+        <input type="text" id="sensorPort"><br>
 
         <button id="submit" type="button" onclick="sendInstanceData()">Submit</button>    
     </form>
@@ -220,10 +225,14 @@ function openLink(evt, animName) {
 function sendInstanceData() {
     data = {
         "type": document.getElementById("sensorType").value,
-        "location": document.getElementById("location").value
+        "location": document.getElementById("location").value,
+        "ip": document.getElementById("sensorIP").value,
+        "port": document.getElementById("sensorPort").value
     }
     console.log(data["type"])
     console.log(data["location"])
+    console.log(data["ip"])
+    console.log(data["port"])
 }
 </script>
 
