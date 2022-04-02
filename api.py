@@ -19,4 +19,4 @@ def getSensorData(sensor_type, location, count_instances):
         "topic_name": sensor_instances[0]
     }).content
     
-getSensorData("light", "himalaya-block")
+# getSensorData("light", "himalaya-block")
