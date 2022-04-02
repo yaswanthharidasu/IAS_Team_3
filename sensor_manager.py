@@ -1,28 +1,51 @@
 import mongo
 import kafka_manager
 import threading
+import json
+
+################################ REGISTRATION OF SENSORS INTO MONGODB ##############################
 
 def registerSensorType(sensor_type):
     mongo.register_sensor_type(sensor_type)
 
 
 def registerSensorInstance(sensor_instance):
-    mongo.register_sensor_instance(sensor_instance)
+    topic_name = mongo.register_sensor_instance(sensor_instance)
 
-
-def getSensorData(topic_name):
     # Start producing data for the newly added sensor
     kafka_manager.create_kafka_topic(topic_name)
-    threading.Thread(target=kafka_manager.produce_data, args=(topic_name,)).start()
-
-    # TODO: send data
-
-
-def getSensorTypes():
-    return mongo.get_sensor_types()
+    threading.Thread(target=kafka_manager.produce_data,
+                     args=(topic_name,)).start()
 
 
-def getSensorDetails(location):
-    return mongo.get_sensor_details(location)
+def register_sensors_from_json(path):
+    f = open(path)
+    sensors = json.load(f)
+    for instance in sensors['sensor_instances']:
+        registerSensorInstance(instance)
+    
 
-getSensorData("light_4")
+############################### RETRIEVING SENSOR DATA FROM KAFKA ###################################
+
+def getSensorData(topic_name):
+    return kafka_manager.consume_data(topic_name)
+
+
+############################### RETRIEVING SENSOR DETAILS USING LOCATION ##############################
+
+def getSensorTypes(location):
+    return mongo.get_sensor_types(location)
+
+
+def getSensorInstances(sensor_type, location):
+    return mongo.get_sensor_instances(sensor_type, location)
+
+
+############################## RETRIEVING ALL SENSOR DETAILS ############################################
+
+def getAllSensorTypes():
+    return mongo.get_all_sensor_types()
+
+
+def getAllSensorInstances():
+    return mongo.get_all_sensor_instances()

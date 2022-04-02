@@ -1,4 +1,5 @@
 import json
+from pydoc_data.topics import topics
 from sys import api_version
 import pymongo
 import threading
@@ -17,10 +18,13 @@ instancesdb = mydb["SensorInstances"]
 
 ################################ DATABASE CREATION and DROPPING ################################
 
-def checkDatabase():
+def databaseExists():
     databases = client.list_database_names()
-    if 'SensorDatabase' not in databases:
-        register_sensors_from_json('sensor_config.json')
+    if 'SensorDatabase' in databases:
+        return True
+    else:
+        return False
+        # register_sensors_from_json('sensor_config.json')
 
 
 def drop_db():
@@ -39,13 +43,8 @@ def register_sensor_instance(sensor_instance):
     count = getCount(instancesdb)
     sensor_instance['_id'] = count+1
     instancesdb.insert_one(sensor_instance)
-
-
-def register_sensors_from_json(path):
-    f = open(path)
-    sensors = json.load(f)
-    for instance in sensors['sensor_instances']:
-        register_sensor_instance(instance)
+    topic_name = sensor_instance["sensor_type"] + '_' + str(sensor_instance['_id'])
+    return topic_name
 
 ################################# RETRIEVING DETAILS OF ALL SENSORS ######################
 

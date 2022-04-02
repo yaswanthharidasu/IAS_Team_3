@@ -1,46 +1,55 @@
 from time import sleep
-from kafka import KafkaProducer, KafkaConsumer
+from kafka import KafkaProducer, KafkaConsumer, TopicPartition
 import json
 import sensor_data
 import threading
 import mongo
 
+ 
 bootstrap_servers = ['localhost:9092']
 
-def get_sensor_instances():
-    sensor_instances = get_sensor_instances()
-    return sensor_instances
-
+################################# KAFKA CREATE/PRODUCE/CONSUME #########################################
 
 def create_kafka_topic(topic_name):
     '''Creates Kafka topic'''
     consumer = KafkaConsumer(topic_name,
                             bootstrap_servers=bootstrap_servers,
                             auto_offset_reset='earliest')
-                            # value_deserializer=lambda m: json.loads(
-                            #      m.decode('utf-8'))
-    # for message in consumer:
-    #     # print(message)
-    #     print("brightness:", message[6]['brightness'])
-
 
 def produce_data(topic_name):
-    print("hello")
     '''Produces data and store into the topic'''
     producer = KafkaProducer(bootstrap_servers=bootstrap_servers)
-    # value_serializer=lambda v: json.dumps(v).encode('utf-8')
     while(True):
         data = sensor_data.produceData(topic_name)
         producer.send(topic_name, bytes(str(data),'utf-8'))
-        sleep(1)
+        sleep(60)
 
+
+def consume_data(topic_name):
+    tp = TopicPartition(topic_name, 0)
+    consumer = KafkaConsumer(bootstrap_servers=bootstrap_servers)
+    consumer.assign([tp])
+    consumer.seek_to_beginning(tp)  
+
+    # obtain the last offset value
+    lastOffset = consumer.end_offsets([tp])[tp]
+
+    data = []
+    for message in consumer:
+        msg = message[6].decode('utf-8')
+        data.append(float(msg))
+        if message.offset == lastOffset - 1:
+            break
+
+    return data
+    
+######################################## PRODUCE DATA FOR ALL SENSORS ##################################
 
 def produce_sensors_data():
-    sensor_instances = mongo.get_sensor_instances()
+    print("STARTED PRODUCING DATA...")
+    sensor_instances = mongo.get_all_sensor_instances()
     for instance in sensor_instances:
-        # Creating thread for each sensor instance
-        topic_name = instance['sensor_type'] + '_' + str(instance['id'])
-        print(topic_name)
+        # Creating thread for each sensor instance present in the mongodb
+        topic_name = instance['sensor_type'] + '_' + str(instance['_id'])
         create_kafka_topic(topic_name)
         threading.Thread(target=produce_data, args=(topic_name,)).start()
-    
