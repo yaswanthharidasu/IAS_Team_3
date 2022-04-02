@@ -65,19 +65,19 @@ def get_all_sensor_instances():
 
 ############################### RETRIEVING BASED ON LOCATION ############################
 
-def get_sensor_types(location):
+def get_sensor_types(sensor_location):
     sensor_types = set()
     for document in instancesdb.find():
-        if document['location'] == location:
+        if document['sensor_location'] == sensor_location:
             sensor_types.add(document['sensor_type'])
     sensor_types = list(sensor_types)
     return sensor_types
     
 
-def get_sensor_instances(sensor_type, location):
+def get_sensor_instances(sensor_type, sensor_location):
     sensor_instances = []
     for document in instancesdb.find():
-        if document['sensor_type'] == sensor_type and document['geo_location'] == location:
+        if document['sensor_type'] == sensor_type and document['sensor_location'] == sensor_location:
             sensor_name = document['sensor_type'] + '_' + str(document['_id'])
             sensor_instances.append(sensor_name)
     print(sensor_instances)

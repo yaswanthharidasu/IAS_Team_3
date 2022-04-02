@@ -33,12 +33,12 @@ def getSensorData(topic_name):
 
 ############################### RETRIEVING SENSOR DETAILS USING LOCATION ##############################
 
-def getSensorTypes(location):
-    return sensor_db.get_sensor_types(location)
+def getSensorTypes(sensor_location):
+    return sensor_db.get_sensor_types(sensor_location)
 
 
-def getSensorInstances(sensor_type, location):
-    return sensor_db.get_sensor_instances(sensor_type, location)
+def getSensorInstances(sensor_type, sensor_location):
+    return sensor_db.get_sensor_instances(sensor_type, sensor_location)
 
 
 ############################## RETRIEVING ALL SENSOR DETAILS ############################################

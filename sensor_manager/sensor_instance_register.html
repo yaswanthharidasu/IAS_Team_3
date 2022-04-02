@@ -230,10 +230,10 @@
     // console.log(document.getElementById("sensorType"))
     function sendInstanceData() {
       data = {
-        "type": document.getElementById("sensorType").value,
-        "location": document.getElementById("location").value,
-        "ip": document.getElementById("sensorIP").value,
-        "port": document.getElementById("sensorPort").value
+        "sensor_type": document.getElementById("sensorType").value,
+        "sensor_location": document.getElementById("location").value,
+        "sensor_ip": document.getElementById("sensorIP").value,
+        "sensor_port": document.getElementById("sensorPort").value
       }
       let options = {
         method: 'POST',

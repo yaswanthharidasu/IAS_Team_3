@@ -39,16 +39,16 @@ def getSensorData():
 
 @app.route("/getSensorTypes", methods=["POST"])
 def getSensorTypes():
-    location = request.json['location']
-    sensor_types = sensor_manager.getSensorTypes(location)
+    sensor_location = request.json['sensor_location']
+    sensor_types = sensor_manager.getSensorTypes(sensor_location)
     return jsonify(sensor_types)
 
 
 @app.route("/getSensorInstances", methods=["POST"])
 def getSensorInstances():
     sensor_type = request.json['sensor_type']
-    location = request.json['location']
-    sensor_instances = sensor_manager.getSensorInstances(sensor_type, location)
+    sensor_location = request.json['sensor_location']
+    sensor_instances = sensor_manager.getSensorInstances(sensor_type, sensor_location)
     return jsonify(sensor_instances)
 
 
