@@ -1,9 +1,9 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
-from itsdangerous import json
 import sensor_manager
 import sensor_db
 import kafka_manager
+import json
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -48,6 +48,7 @@ def getSensorTypes():
 def getSensorInstances():
     sensor_type = request.json['sensor_type']
     sensor_location = request.json['sensor_location']
+    print("type and location", sensor_type, sensor_location)
     sensor_instances = sensor_manager.getSensorInstances(sensor_type, sensor_location)
     return json.dumps(sensor_instances)
 

@@ -80,7 +80,7 @@ def get_sensor_instances(sensor_type, sensor_location):
         if document['sensor_type'] == sensor_type and document['sensor_location'] == sensor_location:
             sensor_name = document['sensor_type'] + '_' + str(document['_id'])
             sensor_instances.append(sensor_name)
-    print(sensor_instances)
+    return sensor_instances
 
 #################################################################################################
 
