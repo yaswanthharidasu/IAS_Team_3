@@ -32,7 +32,7 @@ def registerSensorInstance():
 def getSensorData():
     topic_name = request.json['topic_name']
     sensor_data = sensor_manager.getSensorData(topic_name)
-    return jsonify(sensor_data)
+    return json.dumps(sensor_data)
 
 
 ################################ GET SENSOR DETAILS USING LOCATION #############################
@@ -41,7 +41,7 @@ def getSensorData():
 def getSensorTypes():
     sensor_location = request.json['sensor_location']
     sensor_types = sensor_manager.getSensorTypes(sensor_location)
-    return jsonify(sensor_types)
+    return json.dumps(sensor_types)
 
 
 @app.route("/getSensorInstances", methods=["POST"])
@@ -49,7 +49,7 @@ def getSensorInstances():
     sensor_type = request.json['sensor_type']
     sensor_location = request.json['sensor_location']
     sensor_instances = sensor_manager.getSensorInstances(sensor_type, sensor_location)
-    return jsonify(sensor_instances)
+    return json.dumps(sensor_instances)
 
 
 ############################### GET ALL SENSOR DETAILS #############################################
@@ -57,13 +57,13 @@ def getSensorInstances():
 @app.route("/getAllSensorTypes", methods=["GET"])
 def getAllSensorTypes():
     sensor_types = sensor_manager.getAllSensorTypes()
-    return jsonify(sensor_types)
+    return json.dumps(sensor_types)
 
 
 @app.route("/getAllSensorInstances", methods=["GET"])
 def getAllSensorInstances():
     sensor_instances = sensor_manager.getAllSensorInstances()
-    return jsonify(sensor_instances)
+    return json.dumps(sensor_instances)
 
 
 ################################### MAIN #############################################################

@@ -16,8 +16,6 @@ def performAction():
     instance = request.json
     print(instance)
     # sensor_type = instance["sensor_type"]
-    # sensor_location = instance["sensor_location"]
-    # control_manager.perform_action(sensor_type, sensor_location)
     return "Hello"
 
 ################################### MAIN #############################################################
