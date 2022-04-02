@@ -3,25 +3,26 @@ from kafka import KafkaProducer, KafkaConsumer, TopicPartition
 import json
 import sensor_data
 import threading
-import sensor_manager.sensor_db as sensor_db
+import sensor_db
 
- 
 bootstrap_servers = ['localhost:9092']
 
 ################################# KAFKA CREATE/PRODUCE/CONSUME #########################################
 
+
 def create_kafka_topic(topic_name):
     '''Creates Kafka topic'''
     consumer = KafkaConsumer(topic_name,
-                            bootstrap_servers=bootstrap_servers,
-                            auto_offset_reset='earliest')
+                             bootstrap_servers=bootstrap_servers,
+                             auto_offset_reset='earliest')
+
 
 def produce_data(topic_name):
     '''Produces data and store into the topic'''
     producer = KafkaProducer(bootstrap_servers=bootstrap_servers)
     while(True):
         data = sensor_data.produceData(topic_name)
-        producer.send(topic_name, bytes(str(data),'utf-8'))
+        producer.send(topic_name, bytes(str(data), 'utf-8'))
         sleep(60)
 
 
@@ -29,7 +30,7 @@ def consume_data(topic_name):
     tp = TopicPartition(topic_name, 0)
     consumer = KafkaConsumer(bootstrap_servers=bootstrap_servers)
     consumer.assign([tp])
-    consumer.seek_to_beginning(tp)  
+    consumer.seek_to_beginning(tp)
 
     # obtain the last offset value
     lastOffset = consumer.end_offsets([tp])[tp]
@@ -42,8 +43,9 @@ def consume_data(topic_name):
             break
 
     return data
-    
+
 ######################################## PRODUCE DATA FOR ALL SENSORS ##################################
+
 
 def produce_sensors_data():
     print("STARTED PRODUCING DATA...")

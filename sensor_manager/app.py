@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 from itsdangerous import json
 import sensor_manager
-import sensor_manager.sensor_db as sensor_db
+import sensor_db
 import kafka_manager
 
 app = Flask(__name__)

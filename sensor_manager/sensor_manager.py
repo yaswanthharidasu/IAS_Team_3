@@ -1,9 +1,10 @@
-import sensor_manager.sensor_db as sensor_db
+import sensor_db
 import kafka_manager
 import threading
 import json
 
 ################################ REGISTRATION OF SENSORS INTO MONGODB ##############################
+
 
 def registerSensorType(sensor_type):
     sensor_db.register_sensor_type(sensor_type)
@@ -23,7 +24,7 @@ def register_sensors_from_json(path):
     sensors = json.load(f)
     for instance in sensors['sensor_instances']:
         registerSensorInstance(instance)
-    
+
 
 ############################### RETRIEVING SENSOR DATA FROM KAFKA ###################################
 
