@@ -38,7 +38,6 @@ def register_control_instance(control_instance):
     count = getCount(instancesdb)
     control_instance['_id'] = count+1
     instancesdb.insert_one(control_instance)
-    print("Added")
 
 
 ################################# RETRIEVING DETAILS OF ALL SENSORS ######################

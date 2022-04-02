@@ -1,6 +1,5 @@
 import control_db
 import json
-import control_server
 import requests
 
 def perform_action(sensor_type, sensor_location):
@@ -17,13 +16,5 @@ def register_controllers_from_json(path):
     controllers = json.load(f)
     for instance in controllers['control_instances']:
         registerControlInstance(instance)
-
-
-# def start_controllers():
-#     control_instances = control_db.get_all_control_instances()
-#     for controller in control_instances:
-#         print(controller['sensor_type'])
-#         control_server.start_server(controller['sensor_type'],
-#                                     controller['sensor_ip'], controller['sensor_port'])
-        
+      
             
