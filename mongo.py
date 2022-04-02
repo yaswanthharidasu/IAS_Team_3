@@ -15,12 +15,24 @@ instancesdb = mydb["SensorInstances"]
 #     types = mydb["SensorTypes"]
 #     types.insert_one(sensor_type)
 
+################################ DATABASE CREATION and DROPPING ################################
 
 def checkDatabase():
     databases = client.list_database_names()
     if 'SensorDatabase' not in databases:
         register_sensors_from_json('sensor_config.json')
 
+
+def drop_db():
+    instancesdb.drop()
+    client.drop_database("SensorDatabase")
+
+
+def getCount(collectionObj):
+    '''Returns no.of documents in the given collection object'''
+    return collectionObj.count_documents({})
+
+################################ REGISTRATION OF SENSORS ########################################
 
 def register_sensor_instance(sensor_instance):
     '''Stores the given sensor_instance in the collection'''
@@ -35,18 +47,9 @@ def register_sensors_from_json(path):
     for instance in sensors['sensor_instances']:
         register_sensor_instance(instance)
 
+################################# RETRIEVING DETAILS OF ALL SENSORS ######################
 
-def drop_db():
-    instancesdb.drop()
-    client.drop_database("SensorDatabase")
-
-
-def getCount(collectionObj):
-    '''Returns no.of documents in the given collection object'''
-    return collectionObj.count_documents({})
-
-
-def get_sensor_types():
+def get_all_sensor_types():
     sensor_types = set()
     for document in instancesdb.find():
         sensor_types.add(document['sensor_type'])
@@ -54,20 +57,33 @@ def get_sensor_types():
     return sensor_types
 
 
-def get_sensor_instances():
+def get_all_sensor_instances():
     sensor_instances = []
     for document in instancesdb.find():
-        instance = {"sensor_type": document['sensor_type'], "id": document['_id']}
-        sensor_instances.append(instance)
+        # instance = {"sensor_type": document['sensor_type'], "id": document['_id']}
+        sensor_instances.append(document)
     return sensor_instances
 
-def get_sensor_details(location):
-    sensor_details = []
+############################### RETRIEVING BASED ON LOCATION ############################
+
+def get_sensor_types(location):
+    sensor_types = set()
     for document in instancesdb.find():
-        if document['geo_location'] == location:
+        if document['location'] == location:
+            sensor_types.add(document['sensor_type'])
+    sensor_types = list(sensor_types)
+    return sensor_types
+    
+
+def get_sensor_instances(sensor_type, location):
+    sensor_instances = []
+    for document in instancesdb.find():
+        if document['sensor_type'] == sensor_type and document['geo_location'] == location:
             sensor_name = document['sensor_type'] + '_' + str(document['_id'])
-            sensor_details.append(sensor_name)
-    print(sensor_details)
+            sensor_instances.append(sensor_name)
+    print(sensor_instances)
+
+#################################################################################################
 
 # drop_db()
 # register_sensors_from_json('sensor_config.json')
