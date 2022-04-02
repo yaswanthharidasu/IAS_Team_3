@@ -1,4 +1,4 @@
-import mongo
+import sensor_manager.sensor_db as sensor_db
 import kafka_manager
 import threading
 import json
@@ -6,11 +6,11 @@ import json
 ################################ REGISTRATION OF SENSORS INTO MONGODB ##############################
 
 def registerSensorType(sensor_type):
-    mongo.register_sensor_type(sensor_type)
+    sensor_db.register_sensor_type(sensor_type)
 
 
 def registerSensorInstance(sensor_instance):
-    topic_name = mongo.register_sensor_instance(sensor_instance)
+    topic_name = sensor_db.register_sensor_instance(sensor_instance)
 
     # Start producing data for the newly added sensor
     kafka_manager.create_kafka_topic(topic_name)
@@ -34,18 +34,18 @@ def getSensorData(topic_name):
 ############################### RETRIEVING SENSOR DETAILS USING LOCATION ##############################
 
 def getSensorTypes(location):
-    return mongo.get_sensor_types(location)
+    return sensor_db.get_sensor_types(location)
 
 
 def getSensorInstances(sensor_type, location):
-    return mongo.get_sensor_instances(sensor_type, location)
+    return sensor_db.get_sensor_instances(sensor_type, location)
 
 
 ############################## RETRIEVING ALL SENSOR DETAILS ############################################
 
 def getAllSensorTypes():
-    return mongo.get_all_sensor_types()
+    return sensor_db.get_all_sensor_types()
 
 
 def getAllSensorInstances():
-    return mongo.get_all_sensor_instances()
+    return sensor_db.get_all_sensor_instances()

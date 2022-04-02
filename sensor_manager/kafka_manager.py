@@ -3,7 +3,7 @@ from kafka import KafkaProducer, KafkaConsumer, TopicPartition
 import json
 import sensor_data
 import threading
-import mongo
+import sensor_manager.sensor_db as sensor_db
 
  
 bootstrap_servers = ['localhost:9092']
@@ -47,7 +47,7 @@ def consume_data(topic_name):
 
 def produce_sensors_data():
     print("STARTED PRODUCING DATA...")
-    sensor_instances = mongo.get_all_sensor_instances()
+    sensor_instances = sensor_db.get_all_sensor_instances()
     for instance in sensor_instances:
         # Creating thread for each sensor instance present in the mongodb
         topic_name = instance['sensor_type'] + '_' + str(instance['_id'])
