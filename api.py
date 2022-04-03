@@ -3,8 +3,11 @@ from itsdangerous import json
 import requests
 import json
 import random
-import numpy as np
 import pickle
+
+sensor_url = 'http://localhost:5000/'
+control_url = 'http://localhost:6000/'
+
 
 def readFromFile(path, key):
     f = open(path, 'r')
@@ -17,62 +20,63 @@ def readFromFile(path, key):
         return data['sensor_type'], data['location']
 
 
-def getSensorTopics(path="app_configuration.json"):
+def getSensorInstances(path="app_configuration.json"):
     sensor_type, sensor_location, no_of_instances = readFromFile(
         path, "sensor_details")
-    response = requests.post(url='http://localhost:5000/getSensorInstances', json={
+    url = sensor_url+'getSensorInstances'
+    response = requests.post(url=url, json={
         "sensor_type": sensor_type[0],
         "sensor_location": sensor_location
     }).content
-    sensor_instances = json.loads(response.decode())
+    data = json.loads(response.decode())
+    sensor_instances = data["sensor_instances"]
     return sensor_instances, no_of_instances
 
 
-def getControllerDetails(path="app_configuration.json"):
+def getControlInstances(path="app_configuration.json"):
     sensor_type, sensor_location = readFromFile(path, "controller_details")
-    response = requests.post(url='http://localhost:6000/getControlInstances', json={
+    url = control_url+'getControlInstances'
+    response = requests.post(url=url, json={
         "sensor_type": sensor_type,
         "sensor_location": sensor_location
     }).content
-    control_instances = json.loads(response.decode())
+    data = json.loads(response.decode())
+    control_instances = data['control_instances']
     return control_instances
 
 
 def getSensorData():
-    all_instances, no_of_instances = getSensorTopics()
+    all_instances, no_of_instances = getSensorInstances()
     sensor_instances = random.sample(all_instances, no_of_instances)
-    response = requests.post(url='http://localhost:5000/getSensorData', json={
+    url = sensor_url+'getSensorData'
+    response = requests.post(url=url, json={
         "topic_name": sensor_instances[0]
     }).content
-    # print(response.decode())
-    data = response.decode()
-    data = json.loads(data)
+    data = json.loads(response.decode())
     data = data['sensor_data']
     return data[-1]
 
 
 def controllerAction(data):
-    all_instances = getControllerDetails()
+    all_instances = getControlInstances()
     instance = all_instances[0]
-    url = 'http://'+instance["sensor_ip"]+":"+instance["sensor_port"]
-    if instance["sensor_type"] == "fan":
-        url += "/fanAction"
-    elif instance["sensor_type"] == "ac":
-        url += "/acAction"
-    # print(data, url)
+    url = control_url+'performAction'
     response = requests.post(url=url, json={
+        "sensor_type": instance["sensor_type"],
+        "sensor_ip": instance["sensor_ip"],
+        "sensor_port": instance["sensor_port"],
         "data": int(data)
     }).content
     return response.decode()
 
+
 def predict(data):
     # MAKE API call to the model
-    data = np.reshape(np.array(data), (-1, 1))
     model_file = open('gen_model.pkl', 'rb')
     load_model = pickle.load(model_file)
     predictions = load_model.predict(data)
     return predictions
-    
+
 
 # getSensorData("light", "himalaya-block")
 # readFromFile()

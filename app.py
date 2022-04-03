@@ -1,8 +1,6 @@
-import csv
-import requests
 import api
-import json
-import sleep
+import numpy as np
+from time import sleep
 
 
 # data_file = open('application.json')
@@ -11,6 +9,7 @@ import sleep
 
 while(1):
     data = api.getSensorData()
+    data = np.reshape(np.array(data), (-1, 1))
     prediction = api.predict(data)
     output = api.controllerAction(prediction[0])
     print(output)

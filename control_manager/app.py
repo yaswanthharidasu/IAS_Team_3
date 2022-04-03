@@ -16,18 +16,15 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @app.route("/performAction", methods=["GET", "POST"])
 def performAction():
     instance = request.json
-    print(instance)
-    # sensor_type = instance["sensor_type"]
-    url = "http://localhost:"
+    url = "http://" + instance["sensor_ip"] + ":" + str(instance["sensor_port"]) +"/"
     if instance["sensor_type"] == "fan":
-        url += str(7000) + "/fanAction"
+        url += "fanAction"
     elif instance["sensor_type"] == "ac":
-        url += str(7001) + "/acAction"
-    
+        url += "acAction"
     response = requests.post(url, json={
-        "data": 0
+        "data": instance["data"]
     }).content
-    # print(response.decode())
+    print(response)
     return response.decode()
 
 @app.route("/getControlInstances", methods=["POST"])
@@ -35,8 +32,10 @@ def getControlInstances():
     sensor_type = request.json['sensor_type']
     sensor_location = request.json['sensor_location']
     control_instances = control_manager.get_control_instances(sensor_type, sensor_location)
-    return json.dumps(control_instances)
-
+    jsonObj = {
+        "control_instances": control_instances
+    }
+    return json.dumps(jsonObj)
 
 ################################### MAIN #############################################################
 

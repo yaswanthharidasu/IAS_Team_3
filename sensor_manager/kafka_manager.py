@@ -1,6 +1,5 @@
 from time import sleep
 from kafka import KafkaProducer, KafkaConsumer, TopicPartition
-import json
 import sensor_data
 import threading
 import sensor_db

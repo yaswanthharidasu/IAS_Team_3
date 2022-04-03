@@ -4,8 +4,9 @@ import requests
 
 def perform_action(sensor_type, sensor_location):
     ip, port = control_db.get_ip_and_port(sensor_type, sensor_location)
-    response = requests.get('http://localhost:'+str(port)+'/performAction')
-    print(response)
+    response = requests.get('http://localhost:'+str(port)+'/performAction').content
+    # print(response)
+    return response.decode()
 
 def register_control_instance(instance):
     control_db.register_control_instance(instance)

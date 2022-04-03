@@ -12,11 +12,11 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 ################################## SENSOR REGISTRATION ########################################
 
-@app.route("/registerSensorType", methods=["POST"])
-def registerSensorType():
-    sensor_type = request.json
-    sensor_manager.registerSensorType(sensor_type)
-    return json.dumps({"data": "Registered Sensor Type successfully"})
+# @app.route("/registerSensorType", methods=["POST"])
+# def registerSensorType():
+#     sensor_type = request.json
+#     sensor_manager.registerSensorType(sensor_type)
+#     return json.dumps({"data": "Registered Sensor Type successfully"})
 
 
 @app.route("/registerSensorInstance", methods=["POST"])
@@ -24,7 +24,6 @@ def registerSensorInstance():
     sensor_instance = request.json
     sensor_manager.registerSensorInstance(sensor_instance)
     return json.dumps({"data": "Registered Sensor Instance successfully"})
-
 
 ################################# GET A SENSOR DATA ###########################################
 
@@ -44,7 +43,10 @@ def getSensorData():
 def getSensorTypes():
     sensor_location = request.json['sensor_location']
     sensor_types = sensor_manager.getSensorTypes(sensor_location)
-    return json.dumps(sensor_types)
+    jsonObj = {
+        "sensor_types": sensor_types
+    }
+    return json.dumps(jsonObj)
 
 
 @app.route("/getSensorInstances", methods=["POST"])
@@ -52,21 +54,29 @@ def getSensorInstances():
     sensor_type = request.json['sensor_type']
     sensor_location = request.json['sensor_location']
     sensor_instances = sensor_manager.getSensorInstances(sensor_type, sensor_location)
-    return json.dumps(sensor_instances)
+    jsonObj = {
+        "sensor_instances": sensor_instances
+    }
+    return json.dumps(jsonObj)
 
 
 ############################### GET ALL SENSOR DETAILS #############################################
 
-@app.route("/getAllSensorTypes", methods=["GET"])
+@app.route("/getAllSensorTypes", methods=["GET", "POST"])
 def getAllSensorTypes():
     sensor_types = sensor_manager.getAllSensorTypes()
-    return json.dumps(sensor_types)
+    jsonObj = {
+        "sensor_types": sensor_types
+    }
+    return json.dumps(jsonObj)
 
-
-@app.route("/getAllSensorInstances", methods=["GET"])
+@app.route("/getAllSensorInstances", methods=["GET", "POST"])
 def getAllSensorInstances():
     sensor_instances = sensor_manager.getAllSensorInstances()
-    return json.dumps(sensor_instances)
+    jsonObj = {
+        "sensor_instances": sensor_instances
+    }
+    return json.dumps(jsonObj)
 
 
 ################################### MAIN #############################################################
