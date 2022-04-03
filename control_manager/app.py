@@ -24,7 +24,6 @@ def performAction():
     response = requests.post(url, json={
         "data": instance["data"]
     }).content
-    print(response)
     return response.decode()
 
 @app.route("/getControlInstances", methods=["POST"])

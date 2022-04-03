@@ -1,12 +1,11 @@
-from urllib import response
-from itsdangerous import json
 import requests
 import json
 import random
-import pickle
 
 sensor_url = 'http://localhost:5000/'
 control_url = 'http://localhost:6000/'
+model_url = 'http://localhost:5003/'
+model_name = "ac_prediction_model"
 
 
 def readFromFile(path, key):
@@ -72,10 +71,14 @@ def controllerAction(data):
 
 def predict(data):
     # MAKE API call to the model
-    model_file = open('gen_model.pkl', 'rb')
-    load_model = pickle.load(model_file)
-    predictions = load_model.predict(data)
-    return predictions
+    url = model_url+'predict'
+    response = requests.post(url=url, json={
+        "data": data,
+        "model_name": model_name
+    }).content
+    prediction = json.loads(response.decode())
+    prediction = prediction["predicted_value"]
+    return prediction
 
 
 # getSensorData("light", "himalaya-block")
