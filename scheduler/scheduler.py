@@ -68,11 +68,12 @@ def createDockerFiles(fpath, aname):
     f = open("Dockerfile", "w+")
     f.write("FROM python:3.8-slim-buster")
     f.write("\nWORKDIR /"+aname)
-    f.write("\nCOPY ./requirements.txt /var/www/requirements.txt")
     f.write("\nRUN pip3 install -r /var/www/requirements.txt")
     f.write("\nCOPY . .")
+    f.write("\nCOPY ../../../api.py .")
     f.write("\nEXPOSE 6001")
     f.write('\nCMD ["python3","-m","flask","run"]')
+    f.write("\nCOPY ./requirements.txt /var/www/requirements.txt")
 
     file = open("requirements.txt", "w+")
     file.write("Flask>=2.0.2\nsklearn\npickle-mixin\nnumpy")
@@ -80,9 +81,8 @@ def createDockerFiles(fpath, aname):
 
 def createDockerImage(fpath, fname):
     # os.chdir(fpath)
-    command_ = "sudo docker build -t "+fname+" ."
     subprocess.Popen(command_, shell=True)
-    sleep(300)
+    sleep(100)
 
 
 def check_in_time():

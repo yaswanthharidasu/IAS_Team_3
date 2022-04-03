@@ -13,10 +13,12 @@ def runImg():
      print(request)
      req = request.json
     #  img_file = req.get('img_file_path')
-     img_name = req.get('img_name')
+     img_name = req.get('image')
     #  tm = str(int(time.time()))
     #  container_name = img_name+"_"+tm
     #  complete = "docker run -d --name "+container_name+" "+img_name
+
+     copy_cmd="cp ../api.py api"
      complete = "sudo docker run "+img_name
 
     #  change this command to run docker image...
@@ -37,7 +39,7 @@ def killImg():
      print(request)
      req = request.json
     #  img_file = req.get('img_file_path')
-     img_name = req.get('img_name')
+     img_name = req.get('image')
      command = "sudo docker ps | grep '"+img_name+"' | awk '{ print $1 }'"
      out = subprocess.check_output(command,shell=True)
      out = out.decode('utf-8')
