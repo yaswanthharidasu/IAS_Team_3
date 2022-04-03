@@ -2,9 +2,9 @@ import requests
 import json
 import random
 
-sensor_url = 'http://localhost:5000/'
-control_url = 'http://localhost:6000/'
-model_url = 'http://localhost:5003/'
+sensor_url = 'http://0.0.0.0:5000/'
+control_url = 'http://0.0.0.0:6000/'
+model_url = 'http://0.0.0.0:5003/'
 model_name = "ac_prediction_model"
 
 

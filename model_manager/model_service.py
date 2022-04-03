@@ -28,7 +28,7 @@ class ModelDb(UserMixin, db.Model):
     output_data = db.Column(db.String(80))
     url = db.Column(db.String(80))
 
-    def __init__(self, model_name, model_type, input_data, output_data, url ):
+    def __init__(self, model_name, model_type, input_data, output_data, url):
         self.model_name = model_name
         self.model_type = model_type
         self.input_data = input_data
@@ -40,7 +40,8 @@ class ModelDb(UserMixin, db.Model):
 def home_page():
     return "<h1>Model Service home page</h1>"
 
-@app.route('/model_url', methods = ['POST', 'GET'])
+
+@app.route('/model_url', methods=['POST', 'GET'])
 def send_URL():
     if request.method == 'GET':
         return "Sending URL for given model type..."
@@ -53,10 +54,12 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
 def validateZip():
     pass
 
-def uploadConfig( file_path ):
+
+def uploadConfig(file_path):
     model_file_name = ''
     with ZipFile(file_path, 'r') as zipObj:
         listOfiles = zipObj.namelist()
@@ -64,11 +67,11 @@ def uploadConfig( file_path ):
             if elem.endswith('.json'):
                 if elem.endswith('model_config.json'):
                     model_file_name = elem
-    
+
     if model_file_name != '':
         zip_obj = ZipFile(file_path, 'r')
-        model_json_obj = zip_obj.open( model_file_name )
-        json_data = json.load( model_json_obj )
+        model_json_obj = zip_obj.open(model_file_name)
+        json_data = json.load(model_json_obj)
         print(json_data)
 
         model_data = json_data['model'][0]
@@ -77,10 +80,11 @@ def uploadConfig( file_path ):
         input = ''
         output = ''
         url = 'localhost:5003'
-        obj = ModelDb(model_name=name, model_type=type, input_data = input, output_data = output, url = url)
+        obj = ModelDb(model_name=name, model_type=type,
+                      input_data=input, output_data=output, url=url)
         db.session.add(obj)
         db.session.commit()
-    
+
     '''
     {'model': [{'model_name': 'modelA', 'model_type': 'type1'}]}
     model_data = []
@@ -89,7 +93,8 @@ def uploadConfig( file_path ):
         model_data.append(j_data['model_type'])
     print(model_data)'''
 
-@app.route('/upload_model', methods = ['POST', 'GET'])
+
+@app.route('/upload_model', methods=['POST', 'GET'])
 def uploadModel():
     if request.method == 'POST':
         UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__))
@@ -116,27 +121,28 @@ def uploadModel():
             ######
             #directory = str(filename)
 
-            #path = os.path.join(UPLOAD_FOLDER, directory) 
+            #path = os.path.join(UPLOAD_FOLDER, directory)
 
-            # Create the directory 
+            # Create the directory
             if not os.path.exists(UPLOAD_FOLDER):
                 os.makedirs(UPLOAD_FOLDER)
             ######
 
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             unzip_folder = os.path.join(UPLOAD_FOLDER, filename)
-            #upload unzipped folder 
-            
-            zip_ref = ZipFile( unzip_folder , 'r')
+            # upload unzipped folder
+
+            zip_ref = ZipFile(unzip_folder, 'r')
             zip_ref.extractall(UPLOAD_FOLDER)
             zip_ref.close()
-            
-            uploadConfig( os.path.join(UPLOAD_FOLDER, filename) )
-            return redirect(url_for('uploadModel', filename = filename))
+
+            uploadConfig(os.path.join(UPLOAD_FOLDER, filename))
+            return redirect(url_for('uploadModel', filename=filename))
 
     return render_template('index.html')
 
-@app.route('/predict', methods = ['POST'])
+
+@app.route('/predict', methods=['POST'])
 def predictOutput():
     json_data = request.get_json()
     model_name = json_data['model_name']
@@ -153,14 +159,16 @@ def predictOutput():
 
     # Loading model
     cur_directory = os.getcwd()
-    new_path = cur_directory + '/Model_repository/' + model_name + '/' + model_name + '.pkl'
-    pickle_file = open( new_path, 'rb' )
+    new_path = cur_directory + '/Model_repository/' + \
+        model_name + '/' + model_name + '.pkl'
+    pickle_file = open(new_path, 'rb')
     AI_model = pickle.load(pickle_file)
-    
+
     # Prediction
+    print("ip_data:", ip_data)
     prediction_data = AI_model.predict(ip_data)
     prediction_data = prediction_data.tolist()
-
+    print("pred data:", prediction_data)
     # Response
     jsonObj = {
         "predicted_value": prediction_data
@@ -170,4 +178,4 @@ def predictOutput():
 
 if __name__ == '__main__':
     db.create_all()
-    app.run(debug = True ,port = 5003)
+    app.run(host="0.0.0.0", debug=True, port=5003)

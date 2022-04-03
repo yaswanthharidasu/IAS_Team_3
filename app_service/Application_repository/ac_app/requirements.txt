@@ -1,5 +1,2 @@
-Flask>=2.0.2
-sklearn
-pickle-mixin
 numpy
 requests

@@ -89,4 +89,4 @@ if __name__ == "__main__":
         print("DATABASE ALREADY EXISTS...")
         kafka_manager.produce_sensors_data()
 
-    app.run(port=5000, debug=True)
+    app.run(host="0.0.0.0",port=5000, debug=True)

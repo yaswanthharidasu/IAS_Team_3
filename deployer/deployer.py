@@ -16,7 +16,7 @@ def runImg():
    #  container_name = img_name+"_"+tm
    #  complete = "docker run -d --name "+container_name+" "+img_name
 
-    complete = "sudo docker run "+img_name
+    complete = "sudo docker run --rm -it --network=host "+img_name
 
    #  change this command to run docker image...
 

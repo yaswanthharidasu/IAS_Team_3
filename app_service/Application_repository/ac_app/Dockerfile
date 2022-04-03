@@ -4,4 +4,4 @@ COPY ./requirements.txt /var/www/requirements.txt
 RUN pip3 install -r /var/www/requirements.txt
 COPY . .
 EXPOSE 6001
-CMD ["python3","-m","flask","run"]
+CMD ["python3", "-u", "app.py"]
