@@ -2,9 +2,9 @@ import requests
 import json
 import random
 
-sensor_url = 'http://localhost:5000/'
-control_url = 'http://localhost:6000/'
-model_url = 'http://localhost:5003/'
+sensor_url = 'http://0.0.0.0:5000/'
+control_url = 'http://0.0.0.0:6000/'
+model_url = 'http://0.0.0.0:5003/'
 model_name = "ac_prediction_model"
 
 
@@ -19,18 +19,10 @@ def readFromFile(path, key):
         return data['sensor_type'], data['sensor_location']
 
 
-def get_public_ip():
-    # resp = requests.get("http://api.ipify.org/").content.decode()
-    return "172.17.0.1"
-
-
 def getSensorInstances(path="ac_app.json"):
     sensor_type, sensor_location, no_of_instances = readFromFile(
         path, "sensor_details")
-
-    pub_ip = get_public_ip()
-    url = f"http://{pub_ip}:5000/"+'getSensorInstances'
-    # print(url)
+    url = sensor_url+'getSensorInstances'
     response = requests.post(url=url, json={
         "sensor_type": sensor_type[0],
         "sensor_location": sensor_location
@@ -42,11 +34,7 @@ def getSensorInstances(path="ac_app.json"):
 
 def getControlInstances(path="ac_app.json"):
     sensor_type, sensor_location = readFromFile(path, "controller_details")
-
-    pub_ip = get_public_ip()
-
-    url = f"http://{pub_ip}:6000/"+'getControlInstances'
-    # print(url)
+    url = control_url+'getControlInstances'
     response = requests.post(url=url, json={
         "sensor_type": sensor_type,
         "sensor_location": sensor_location
@@ -59,10 +47,7 @@ def getControlInstances(path="ac_app.json"):
 def getSensorData():
     all_instances, no_of_instances = getSensorInstances()
     sensor_instances = random.sample(all_instances, no_of_instances)
-
-    pub_ip = get_public_ip()
-    url = f"http://{pub_ip}:5000/"+'getSensorData'
-    # print(url)
+    url = sensor_url+'getSensorData'
     response = requests.post(url=url, json={
         "topic_name": sensor_instances[0]
     }).content
@@ -74,9 +59,7 @@ def getSensorData():
 def controllerAction(data):
     all_instances = getControlInstances()
     instance = all_instances[0]
-    # url = control_url+'performAction'
-    pub_ip = get_public_ip()
-    url = f"http://{pub_ip}:6000/"+'performAction'
+    url = control_url+'performAction'
     response = requests.post(url=url, json={
         "sensor_type": instance["sensor_type"],
         "sensor_ip": instance["sensor_ip"],
@@ -88,12 +71,7 @@ def controllerAction(data):
 
 def predict(data):
     # MAKE API call to the model
-    # url = model_url+'predict'
-    pub_ip = get_public_ip()
-    url = f"http://{pub_ip}:5003/"+'predict'
-    # print("Data: ", data.tolist())
-    # data = data.tolist()
-    print(type(data))
+    url = model_url+'predict'
     response = requests.post(url=url, json={
         "data": data.tolist(),
         "model_name": model_name
