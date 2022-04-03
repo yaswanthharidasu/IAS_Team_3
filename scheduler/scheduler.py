@@ -10,9 +10,10 @@ from flask import Flask, request, redirect, flash, render_template
 from werkzeug.utils import secure_filename
 from time import sleep
 
+
 sys.path.append('..')
-# print(sys.path)
 from app_service.app import application_DB
+# print(sys.path)
 
 UPLOAD_FOLDER = os.path.dirname(os.path.realpath(__file__))
 ALLOWED_EXTENSIONS = set(['json'])
@@ -65,22 +66,21 @@ def createDockerFiles(fpath, aname):
     print(os.getcwd())
     os.chdir(os.path.realpath(fpath))
     print(os.getcwd())
+    file = open("requirements.txt", "w+")
+    file.write("Flask>=2.0.2\nsklearn\npickle-mixin\nnumpy\nrequests")
     f = open("Dockerfile", "w+")
     f.write("FROM python:3.8-slim-buster")
     f.write("\nWORKDIR /"+aname)
+    f.write("\nCOPY ./requirements.txt /var/www/requirements.txt")
     f.write("\nRUN pip3 install -r /var/www/requirements.txt")
     f.write("\nCOPY . .")
-    f.write("\nCOPY ../../../api.py .")
     f.write("\nEXPOSE 6001")
     f.write('\nCMD ["python3","-m","flask","run"]')
-    f.write("\nCOPY ./requirements.txt /var/www/requirements.txt")
-
-    file = open("requirements.txt", "w+")
-    file.write("Flask>=2.0.2\nsklearn\npickle-mixin\nnumpy")
 
 
 def createDockerImage(fpath, fname):
     # os.chdir(fpath)
+    command_ = "echo 0548 | sudo -S docker build -t " + fname + " ."
     subprocess.Popen(command_, shell=True)
     sleep(100)
 
@@ -96,6 +96,8 @@ def check_in_time():
         for each_app_time in in_time:
             if(current_time == each_app_time[1]):
                 app_path = app_path+each_app_time[0]+"/"
+                copy_cmd = "cp ../api.py "+app_path+""
+                subprocess.Popen(copy_cmd, shell=True)
                 createDockerFiles(app_path, each_app_time[0])
                 createDockerImage(app_path, each_app_time[0])
                 print("Deploy", each_app_time[0])
@@ -141,6 +143,13 @@ def upload_file():
             path = os.path.join(UPLOAD_FOLDER, directory)
             os.makedirs(path)
             file.save(os.path.join(path, filename))
+            print(filename, directory)
+
+            # file.save("../app_service/Application_repository/"+directory+"/"+filename)
+            cpy_cmd = "cp data/"+directory+"/" + filename + \
+                " ../app_service/Application_repository/"+directory+"/"+filename
+            subprocess.Popen(cpy_cmd, shell=True)
+
             add_schedule(os.path.join(path, filename))
             print("Upload complete")
             json_obj = open('./data/' + file.filename.split('.')
