@@ -13,10 +13,10 @@ def readFromFile(path, key):
     data = json.load(f)
     if key == "sensor_details":
         data = data["sensor_details"]
-        return data['sensor_type'], data['location'], data['no_of_instances']
+        return data['sensor_type'], data['sensor_location'], data['no_of_instances']
     elif key == "controller_details":
         data = data["controller_details"]
-        return data['sensor_type'], data['location']
+        return data['sensor_type'], data['sensor_location']
 
 
 def getSensorInstances(path="app_configuration.json"):
@@ -73,7 +73,7 @@ def predict(data):
     # MAKE API call to the model
     url = model_url+'predict'
     response = requests.post(url=url, json={
-        "data": data,
+        "data": data.tolist(),
         "model_name": model_name
     }).content
     prediction = json.loads(response.decode())

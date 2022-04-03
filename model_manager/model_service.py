@@ -14,7 +14,7 @@ import numpy as np
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///model_info.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:0548@localhost/app'
 db = SQLAlchemy(app)
 
 ALLOWED_EXTENSIONS = set(['zip'])
