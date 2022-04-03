@@ -12,6 +12,7 @@ instancesdb = mydb["ControlInstances"]
 
 ################################ DATABASE CREATION and DROPPING ################################
 
+
 def databaseExists():
     databases = client.list_database_names()
     if 'SensorDatabase' in databases:
@@ -19,7 +20,7 @@ def databaseExists():
             if collection == 'ControlInstances':
                 return True
     return False
-        # register_sensors_from_json('sensor_config.json')
+    # register_sensors_from_json('sensor_config.json')
 
 
 def drop_db():
@@ -32,6 +33,7 @@ def getCount(collectionObj):
     return collectionObj.count_documents({})
 
 ################################ REGISTRATION OF SENSORS ########################################
+
 
 def register_control_instance(control_instance):
     '''Stores the given control_instance in the collection'''
@@ -64,6 +66,7 @@ def get_ip_and_port(sensor_type, sensor_location):
 
 ############################### RETRIEVING BASED ON LOCATION ############################
 
+
 def get_control_types(sensor_location):
     control_types = set()
     for document in instancesdb.find():
@@ -71,15 +74,14 @@ def get_control_types(sensor_location):
             control_types.add(document['sensor_type'])
     control_types = list(control_types)
     return control_types
-    
 
-def get_control_instances(control_type, sensor_location):
+
+def get_control_instances(sensor_type, sensor_location):
     control_instances = []
     for document in instancesdb.find():
-        if document['sensor_type'] == control_type and document['sensor_location'] == sensor_location:
-            control_name = document['sensor_type'] + '_' + str(document['_id'])
-            control_instances.append(control_name)
-    print(control_instances)
+        if document['sensor_type'] == sensor_type and document['sensor_location'] == sensor_location:
+            control_instances.append(document)
+    return control_instances
 
 #################################################################################################
 

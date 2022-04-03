@@ -1,0 +1,11 @@
+{
+    "sensor_details":{
+        "sensor_type": ["temp"],
+        "location": "vindhya-block",
+        "no_of_instances": 1
+    },
+    "controller_details":{
+        "sensor_type": "ac",
+        "location": "vindhya-block"
+    }
+}

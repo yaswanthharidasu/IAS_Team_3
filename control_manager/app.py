@@ -27,8 +27,16 @@ def performAction():
     response = requests.post(url, json={
         "data": 0
     }).content
-    print(response.decode())
+    # print(response.decode())
     return response.decode()
+
+@app.route("/getControlInstances", methods=["POST"])
+def getControlInstances():
+    sensor_type = request.json['sensor_type']
+    sensor_location = request.json['sensor_location']
+    control_instances = control_manager.get_control_instances(sensor_type, sensor_location)
+    return json.dumps(control_instances)
+
 
 ################################### MAIN #############################################################
 
@@ -37,4 +45,4 @@ if __name__ == "__main__":
         print("DATABASE CREATED...")
         control_manager.register_controllers_from_json("control_config.json")
     
-    app.run(port=5000, debug=True)
+    app.run(port=6000, debug=True)

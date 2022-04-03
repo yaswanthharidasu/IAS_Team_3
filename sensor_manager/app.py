@@ -32,7 +32,10 @@ def registerSensorInstance():
 def getSensorData():
     topic_name = request.json['topic_name']
     sensor_data = sensor_manager.getSensorData(topic_name)
-    return json.dumps(sensor_data)
+    jsonObj = {
+        "sensor_data": sensor_data
+    }
+    return json.dumps(jsonObj)
 
 
 ################################ GET SENSOR DETAILS USING LOCATION #############################
@@ -48,7 +51,6 @@ def getSensorTypes():
 def getSensorInstances():
     sensor_type = request.json['sensor_type']
     sensor_location = request.json['sensor_location']
-    print("type and location", sensor_type, sensor_location)
     sensor_instances = sensor_manager.getSensorInstances(sensor_type, sensor_location)
     return json.dumps(sensor_instances)
 
